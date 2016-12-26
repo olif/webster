@@ -13,7 +13,7 @@ A small websocket server.
 		{
 			protected override void OnMessageReceived(IWebSocketConnection conn, string message)
 			{
-				throw new NotImplementedException();
+				conn.Send("Echo");
 			}
 
 			protected override void OnConnectionClosed(IWebSocketConnection conn)
