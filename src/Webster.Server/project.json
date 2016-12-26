@@ -10,10 +10,5 @@
   "frameworks": {
     "netstandard1.3": {
     }
-  },
-
-  "runtimes": {
-    "win81-x64": {},
-    "osx.10.12-x64": {}
   }
 }
