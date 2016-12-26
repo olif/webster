@@ -1,0 +1,22 @@
+{
+  "version": "1.0.0-*",
+  "testRunner": "xunit",
+  "dependencies": {
+    "dotnet-test-xunit": "2.2.0-preview2-build1029",
+    "FluentAssertions": "4.18.0",
+    "Microsoft.AspNetCore.TestHost": "1.1.0",
+    "Microsoft.NETCore.App": "1.1.0",
+    "Webster.Server": "1.0.0-*",
+    "xunit": "2.2.0-beta3-build3402"
+  },
+
+  "runtimes": {
+    "win81-x64": {}
+  },
+
+  "frameworks": {
+    "netcoreapp1.0": {
+
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "version": "1.0.0-*",
+  "dependencies": {
+    "Microsoft.AspNetCore.Http.Abstractions": "1.1.0",
+    "Microsoft.AspNetCore.WebSockets": "1.0.0"
+  },
+
+  "frameworks": {
+    "netstandard1.6": {
+    }
+  },
+
+  "runtimes": {
+    "win81-x64": {},
+    "osx.10.12-x64": {}
+  }
+}
