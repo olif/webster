@@ -34,12 +34,12 @@ namespace Webster.Server.IntegrationTests
         }
 
         [Fact]
-        public async Task MessageRecieved_IsCalledWithTheMessage_WhenMessageIsReceived()
+        public async Task TextMessageRecieved_IsCalledWithTheMessage_WhenMessageIsReceived()
         {
             var semaphore = new SemaphoreSlim(0);
             var msg = "hello";
             var recievedMsg = "";
-            _stub.MessageReceived = (conn, rcvdMsg) =>
+            _stub.TextMessageReceived = (conn, rcvdMsg) =>
             {
                 recievedMsg = rcvdMsg;
                 semaphore.Release(1);
@@ -49,6 +49,25 @@ namespace Webster.Server.IntegrationTests
 
             await Task.WhenAny(semaphore.WaitAsync(), Task.Delay(200));
             recievedMsg.Should().Be(msg);
+        }
+
+        [Fact]
+        public async Task BinaryMessageRecieved_IsCalledWithTheMessage_WhenMessageIsReceived()
+        {
+            var semaphore = new SemaphoreSlim(0);
+            var msg = "hello";
+            byte[] recievedMsg = null;
+            _stub.BinaryMessageReceived = (conn, rcvdMsg) =>
+            {
+                recievedMsg = rcvdMsg;
+                semaphore.Release(1);
+            };
+            var socket = await _client.ConnectAsync(new Uri("http://localhost"), CancellationToken.None);
+            await socket.SendAsync(GetWebsocketMsg(msg), WebSocketMessageType.Binary, true, CancellationToken.None);
+
+            await Task.WhenAny(semaphore.WaitAsync(), Task.Delay(200));
+            var receivedText = Encoding.UTF8.GetString(recievedMsg);
+            receivedText.Should().Be(msg);
         }
 
         [Fact]
@@ -77,7 +96,7 @@ namespace Webster.Server.IntegrationTests
         {
             var connClosedSem = new SemaphoreSlim(0);
             var connHasBeenClosed = false;
-            _stub.MessageReceived = async (conn, _) =>
+            _stub.TextMessageReceived = async (conn, _) =>
             {
                 await Task.Delay(200);
                 await conn.CloseConnection();

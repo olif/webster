@@ -18,7 +18,8 @@ namespace Webster.Server
         private readonly WebSocket _socket;
         private readonly TaskQueue _taskQueue;
         internal Action OnOpen { get; set; }
-        internal Action<string> OnMessage { get; set; }
+        internal Action<string> OnTextMessage { get; set; }
+        internal Action<byte[]> OnBinaryMessage { get; set; } 
         internal Action OnClose { get; set; }
         internal Action<Exception> OnError { get; set; }
         public Guid Id { get; }
@@ -35,9 +36,9 @@ namespace Webster.Server
             OnOpen = () => { };
             OnClose = () => { };
             OnError = (ex) => { };
-            OnMessage = (msg) => { };
+            OnTextMessage = (msg) => { };
+            OnBinaryMessage = (msg) => { };
         }
-
 
         public async Task Send(string message)
         {
@@ -90,10 +91,11 @@ namespace Webster.Server
                             OnClose();
                             break;
                         case WebSocketMessageType.Text:
-                            OnMessage((string) result.Data);
+                            OnTextMessage((string) result.Data);
                             break;
                         case WebSocketMessageType.Binary:
-                            throw new NotImplementedException();
+                            OnBinaryMessage((byte[]) result.Data);
+                            break;
                         default:
                             throw new ArgumentOutOfRangeException();
                     }
@@ -148,3 +150,4 @@ namespace Webster.Server
         }
     }
 }
+

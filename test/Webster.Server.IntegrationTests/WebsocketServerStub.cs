@@ -5,7 +5,9 @@ namespace Webster.Server.IntegrationTests
 {
     public class WebSocketServerStub : WebSocketServer
     {
-        public Action<IWebSocketConnection, string> MessageReceived;
+        public Action<IWebSocketConnection, string> TextMessageReceived;
+
+        public Action<IWebSocketConnection, byte[]> BinaryMessageReceived;
 
         public Action<IWebSocketConnection> ConnectionClosed;
 
@@ -13,14 +15,19 @@ namespace Webster.Server.IntegrationTests
 
         public WebSocketServerStub()
         {
-            MessageReceived = (conn, msg) => { };
+            TextMessageReceived = (conn, msg) => { };
             ConnectionClosed = (conn) => { };
             ConnectionOpened = (conn, query) => { };
         }
 
-        protected override void OnMessageReceived(IWebSocketConnection conn, string message)
+        protected override void OnTextMessageReceived(IWebSocketConnection conn, string message)
         {
-            MessageReceived(conn, message);
+            TextMessageReceived(conn, message);
+        }
+
+        protected override void OnBinaryMessageReceived(IWebSocketConnection conn, byte[] message)
+        {
+            BinaryMessageReceived(conn, message);
         }
 
         protected override void OnConnectionClosed(IWebSocketConnection conn)

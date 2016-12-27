@@ -13,7 +13,9 @@ namespace Webster.Server
         private readonly IDictionary<Guid, IWebSocketConnection> _activeConnections = 
             new ConcurrentDictionary<Guid, IWebSocketConnection>();
 
-        protected abstract void OnMessageReceived(IWebSocketConnection conn, string message);
+        protected abstract void OnTextMessageReceived(IWebSocketConnection conn, string message);
+
+        protected abstract void OnBinaryMessageReceived(IWebSocketConnection conn, byte[] message);
 
         protected abstract void OnConnectionClosed(IWebSocketConnection conn);
 
@@ -33,7 +35,8 @@ namespace Webster.Server
 
                 var connection = new WebSocketConnection(socket, context.Request.Query, CancellationToken.None);
                 connection.OnOpen = () => OnConnectionOpened(connection, context);
-                connection.OnMessage = (msg) => OnMessageReceived(connection, msg);
+                connection.OnTextMessage = (msg) => OnTextMessageReceived(connection, msg);
+                connection.OnBinaryMessage = (msg) => OnBinaryMessageReceived(connection, msg);
                 connection.OnClose = () => OnCloseInternal(connection);
 
                 _activeConnections.Add(connection.Id, connection);
