@@ -59,5 +59,5 @@ A small websocket server.
 2. Register websockets and the websocket server
 
 		app.UseWebSockets();
-		app.UseWebSocketServer(new DummyServer());
+		app.UseWebSocketServer(new WebSocketServerStub());
 
