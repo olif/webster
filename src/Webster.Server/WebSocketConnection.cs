@@ -23,14 +23,8 @@ namespace Webster.Server
         internal Action OnClose { get; set; }
         internal Action<Exception> OnError { get; set; }
 
-        /// <summary>
-        /// Unique id of this connection
-        /// </summary>
         public Guid Id { get; }
 
-        /// <summary>
-        /// The websocket request context
-        /// </summary>
         public HttpContext HttpContext { get; }
 
         public WebSocketConnection(WebSocket socket, HttpContext context, CancellationToken disconnectToken)
