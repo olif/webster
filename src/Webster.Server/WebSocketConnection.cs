@@ -22,13 +22,21 @@ namespace Webster.Server
         internal Action<byte[]> OnBinaryMessage { get; set; } 
         internal Action OnClose { get; set; }
         internal Action<Exception> OnError { get; set; }
-        public Guid Id { get; }
-        public IQueryCollection QueryCollection { get; }
 
-        public WebSocketConnection(WebSocket socket, IQueryCollection queryCollection, CancellationToken disconnectToken)
+        /// <summary>
+        /// Unique id of this connection
+        /// </summary>
+        public Guid Id { get; }
+
+        /// <summary>
+        /// The websocket request context
+        /// </summary>
+        public HttpContext HttpContext { get; }
+
+        public WebSocketConnection(WebSocket socket, HttpContext context, CancellationToken disconnectToken)
         {
             _socket = socket;
-            QueryCollection = queryCollection;
+            HttpContext = context;
             _disconnectToken = disconnectToken;
             _taskQueue = new TaskQueue();
 
@@ -121,7 +129,6 @@ namespace Webster.Server
             {
                 return WebSocketMessage.CloseMessage;
             }
-
 
             var buffer = new byte[1024];
 

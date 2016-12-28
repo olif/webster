@@ -26,7 +26,7 @@ namespace Webster.Server.IntegrationTests
         public async Task ConnectionOpened_IsCalled_WhenConnectionHasEstablished()
         {
             bool onOpenCalled = false;
-            _stub.ConnectionOpened = (conn, query) => onOpenCalled = true;
+            _stub.ConnectionOpened = (conn) => onOpenCalled = true;
             await _client.ConnectAsync(new Uri("http://localhost"), CancellationToken.None);
 
             await Task.Delay(100);
@@ -81,7 +81,7 @@ namespace Webster.Server.IntegrationTests
                 connectionClosedCalled = true;
                 closedSem.Release(1);
             };
-            _stub.ConnectionOpened = (_, __) => openedSem.Release(1);
+            _stub.ConnectionOpened = (_) => openedSem.Release(1);
             var socket = await _client.ConnectAsync(new Uri("http://localhost"), CancellationToken.None);
 
             await Task.WhenAny(openedSem.WaitAsync(), Task.Delay(200));

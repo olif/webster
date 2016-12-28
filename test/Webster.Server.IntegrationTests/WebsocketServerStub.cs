@@ -11,13 +11,17 @@ namespace Webster.Server.IntegrationTests
 
         public Action<IWebSocketConnection> ConnectionClosed;
 
-        public Action<IWebSocketConnection, HttpContext> ConnectionOpened;
+        public Action<IWebSocketConnection> ConnectionOpened;
+
+        public Action<IWebSocketConnection, Exception> OnSocketError;
 
         public WebSocketServerStub()
         {
             TextMessageReceived = (conn, msg) => { };
+            BinaryMessageReceived = (conn, msg) => { };
             ConnectionClosed = (conn) => { };
-            ConnectionOpened = (conn, query) => { };
+            ConnectionOpened = (conn) => { };
+            OnSocketError = (conn, err) => {};
         }
 
         protected override void OnTextMessageReceived(IWebSocketConnection conn, string message)
@@ -30,14 +34,19 @@ namespace Webster.Server.IntegrationTests
             BinaryMessageReceived(conn, message);
         }
 
+        protected override void OnError(IWebSocketConnection conn, Exception e)
+        {
+            OnSocketError(conn, e);
+        }
+
         protected override void OnConnectionClosed(IWebSocketConnection conn)
         {
             ConnectionClosed(conn);
         }
 
-        protected override void OnConnectionOpened(IWebSocketConnection conn, HttpContext context)
+        protected override void OnConnectionOpened(IWebSocketConnection conn)
         {
-            ConnectionOpened(conn, context);
+            ConnectionOpened(conn);
         }
     }
 }
